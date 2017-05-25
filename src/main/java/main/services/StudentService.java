@@ -1,8 +1,10 @@
 package main.services;
 
+import java.io.IOException;
 import java.util.List;
 
 import main.model.dto.StudentDTO;
+import main.model.entity.Student;
 
 
 /**
@@ -10,14 +12,14 @@ import main.model.dto.StudentDTO;
  */
 public interface StudentService {
 
-   List<StudentDTO> getAllStudents();
+   List<Student> getAllStudents() throws IOException;
 
-   long saveStudent(StudentDTO student);
+   void saveStudent(Student student);
 
-   void updateStudent(StudentDTO student);
+   void updateStudent(Student student);
 
    void deleteStudent(long id);
 
-   StudentDTO getById(long studentId);
+   Student getById(long studentId);
 
 }

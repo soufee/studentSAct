@@ -15,7 +15,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "student")
+@Table(name = "students")
 public class Student implements Serializable {
 
     private long id;

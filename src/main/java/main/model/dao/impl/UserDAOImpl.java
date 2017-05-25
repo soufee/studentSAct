@@ -25,7 +25,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Long insert(User entity) {
+    public void insert(User entity) {
         throw new NotImplementedException();
     }
 

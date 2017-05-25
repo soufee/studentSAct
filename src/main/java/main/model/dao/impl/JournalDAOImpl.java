@@ -28,10 +28,10 @@ public class JournalDAOImpl implements JournalDAO {
     }
 
     @Override
-    public Long insert(Journal entity) {
+    public void insert(Journal entity) {
         long result = -1;
 
-        return result;
+     //   return result;
     }
 
     @Override

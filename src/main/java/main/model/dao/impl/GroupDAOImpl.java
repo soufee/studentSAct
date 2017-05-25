@@ -29,10 +29,10 @@ public class GroupDAOImpl implements GroupDAO {
     }
 
     @Override
-    public Long insert(Group entity) {
+    public void insert(Group entity) {
         long result = -1;
 
-        return result;
+      //  return result;
     }
 
     @Override

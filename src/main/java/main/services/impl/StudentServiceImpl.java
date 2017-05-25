@@ -1,9 +1,11 @@
 package main.services.impl;
 
+import main.model.dao.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,52 +28,50 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @PreAuthorize(value = "hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public List<StudentDTO> getAllStudents() {
+    public List<Student> getAllStudents() throws IOException {
 
         List<Student> students = (List<Student>) studentDAO.getAll();
-        students.sort(Comparator.comparingLong(Student::getId));
+//        students.sort(Comparator.comparingLong(Student::getId));
+//
+//        List<Student> studentDTOs = new ArrayList<>();
+//
+//        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+//
+//        BoundMapperFacade<Student, Student>
+//                boundMapper = mapperFactory.getMapperFacade(Student.class, Student.class);
+//
+//        students.forEach(student -> {
+//            studentDTOs.add(boundMapper.map(student));
+//        });
 
-        List<StudentDTO> studentDTOs = new ArrayList<>();
-
-        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-
-        BoundMapperFacade<Student, StudentDTO>
-                boundMapper = mapperFactory.getMapperFacade(Student.class, StudentDTO.class);
-
-        students.forEach(student -> {
-            studentDTOs.add(boundMapper.map(student));
-        });
-
-        return studentDTOs;
+        return students;
     }
 
     @Override
     @PreAuthorize(value = "hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public long saveStudent(StudentDTO student) {
-        //return studentDAO.insert(student);
-        return 0;
+    public void saveStudent(Student student) {
+    studentDAO.insert(student);
+
     }
 
     @Override
     @PreAuthorize(value = "hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public void updateStudent(StudentDTO student) {
-        //studentDAO.update(student);
+    public void updateStudent(Student student) {
+       studentDAO.update(student);
     }
 
     @Override
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     public void deleteStudent(long id) {
-     /*   Student student = new Student();
-        student.setId(id);
-        studentDAO.delete(student);
-        */
+      Student student =   studentDAO.getById(id);
+studentDAO.delete(student);
     }
 
     @Override
     @PreAuthorize(value = "hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public StudentDTO getById(long studentId) {
-       // return studentDAO.getById(studentId);
-        return null;
+    public Student getById(long studentId) {
+        Student student =   studentDAO.getById(studentId);
+        return student;
     }
 
     @Autowired

@@ -31,10 +31,10 @@ public class LessonDAOImpl implements LessonDAO {
     }
 
     @Override
-    public Long insert(Lesson entity) {
+    public void insert(Lesson entity) {
         long result = -1;
 
-        return result;
+    //    return result;
     }
 
     @Override

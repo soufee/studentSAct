@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="main.model.dao.mappers.StudentMapper">
+    <select id="getAllStudents" resultMap="rm">SELECT * FROM student</select>
+    <resultMap id="rm" type="main.model.entity.Student"></resultMap>
+    <select id="getStudentById" resultMap="rm" parameterType="java.lang.Integer">SELECT * FROM student WHERE id =#{id}</select>
+    <delete id="deleteStudent" parameterType="java.lang.Integer">
+       DELETE FROM student WHERE id =#{id}
+       </delete>
+    <insert id="insertStudent" parameterType="main.model.entity.Student">
+        INSERT INTO student (name,age) VALUES (#{name},#{age})
+    </insert>
+    <update id="updateStudent" parameterType="main.model.entity.Student">
+    UPDATE student set name = #{name}, age = #{age} where id = #{id}
+    </update>
+
+</mapper>

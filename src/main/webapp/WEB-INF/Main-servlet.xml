@@ -4,12 +4,14 @@
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:context="http://www.springframework.org/schema/context"
              xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+             xmlns:tx="http://www.springframework.org/schema/tx"
              xsi:schemaLocation="http://www.springframework.org/schema/mvc
              http://www.springframework.org/schema/mvc/spring-mvc.xsd
              http://www.springframework.org/schema/beans
              http://www.springframework.org/schema/beans/spring-beans.xsd
              http://www.springframework.org/schema/context
-             http://www.springframework.org/schema/context/spring-context.xsd">
+             http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <beans:import resource="spring-security.xml"/>
 
@@ -24,67 +26,98 @@
         <beans:property name="suffix" value=".jsp"/>
     </beans:bean>
 
-    <interceptors>
-        <interceptor>
-            <mapping path="/list/edit"/>
-            <beans:bean id="userInterceptor" class="main.util.UserInterceptor"/>
-        </interceptor>
-    </interceptors>
+    <!--<interceptors>-->
+        <!--<interceptor>-->
+            <!--<mapping path="/list/edit"/>-->
+            <!--<beans:bean id="userInterceptor" class="main.util.UserInterceptor"/>-->
+        <!--</interceptor>-->
+    <!--</interceptors>-->
 
     <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <beans:property name="driverClassName" value="org.postgresql.Driver"/>
         <beans:property name="url" value="jdbc:postgresql://localhost/students"/>
-        <beans:property name="username" value="user"/>
-        <beans:property name="password" value="1234"/>
+        <beans:property name="username" value="postgres"/>
+        <beans:property name="password" value="postgres"/>
     </beans:bean>
 
-    <!--<beans:bean id="sessionFactory"-->
-                <!--class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">-->
+
+    <!--<beans:bean id="entityManagerFactory"-->
+
+          <!--class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">-->
 
         <!--<beans:property name="dataSource" ref="dataSource"/>-->
 
-        <!--<beans:property name="hibernateProperties">-->
-            <!--<beans:props>-->
-                <!--<beans:prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</beans:prop>-->
-                <!--<beans:prop key="hibernate.show_sql">true</beans:prop>-->
-            <!--</beans:props>-->
+        <!--<beans:property name="jpaVendorAdapter">-->
+
+            <!--<beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>-->
+
         <!--</beans:property>-->
 
-        <!--<beans:property name="packagesToScan" value="main.model.entity"/>-->
+        <!--<beans:property name="jpaProperties">-->
+
+            <!--<beans:props>-->
+                <!--&lt;!&ndash;<beans:prop key="hibernate."&ndash;&gt;-->
+
+                <!--<beans:prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</beans:prop>-->
+
+                <!--<beans:prop key="hibernate.show_sql">true</beans:prop>-->
+
+                <!--<beans:prop key="hibernate.hbm2ddl.auto">update</beans:prop>-->
+
+            <!--</beans:props>-->
+
+        <!--</beans:property>-->
 
     <!--</beans:bean>-->
 
+    <beans:bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
-    <beans:bean id="entityManagerFactory"
+<!--<&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
 
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-
-        <beans:property name="dataSource" ref="dataSource"/>
-
-        <beans:property name="jpaVendorAdapter">
-
-            <beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
-
-        </beans:property>
-
-        <beans:property name="jpaProperties">
-
-            <beans:props>
-                <!--<beans:prop key="hibernate."-->
-
-                <beans:prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</beans:prop>
-
-                <beans:prop key="hibernate.show_sql">true</beans:prop>
-
-                <beans:prop key="hibernate.hbm2ddl.auto">update</beans:prop>
-
-            </beans:props>
-
-        </beans:property>
-
+    <beans:bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <beans:property name="entityManagerFactory" ref="emf"/>
     </beans:bean>
 
-    <beans:bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <beans:bean id="emf"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <beans:property name="dataSource" ref="dataSource"/>
+        <beans:property name="jpaVendorAdapter">
+            <beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </beans:property>
+        <beans:property name="packagesToScan" value="main"/>
+        <beans:property name="jpaProperties">
+            <beans:props>
+                <beans:prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL93Dialect</beans:prop>
+                <beans:prop key="hibernate.max_fetch_depth">4</beans:prop>
+                <beans:prop key="hibernate.jdbc.fetch_size">50</beans:prop>
+                <beans:prop key="hibernate.jdbc.batch_size">10</beans:prop>
+                <beans:prop key="hibernate.show_sql">true</beans:prop>
+            </beans:props>
+        </beans:property>
+    </beans:bean>
+
+    <jpa:repositories base-package="main.model.dao" entity-manager-factory-ref="emf"/>
+    <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+
+         <beans:property name="dataSource" ref="dataSource" />
+
+         <beans:property name="typeAliasesPackage" value="main.model.entity.Student"/>
+
+         <beans:property name="mapperLocations" value="classpath:mybatis-mapper.xml" />
+
+        </beans:bean>
+
+    <beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+
+        <beans:constructor-arg index="0" ref="sqlSessionFactory" />
+
+       </beans:bean>
+    <beans:bean class = "org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <beans:property name="basePackage" value="main.model.dao.mappers" />
+    </beans:bean>
+
 
 
 </beans:beans>

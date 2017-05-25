@@ -41,7 +41,7 @@ public class Group {
         this.name = name;
     }
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<Student> getStudents() {
         return students;
     }

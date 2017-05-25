@@ -17,7 +17,7 @@
         <td><c:out value="${student.id}"></c:out></td>
         <td><c:out value="${student.name}"></c:out></td>
         <td><c:out value="${student.age}"></c:out></td>
-        <td>Group: <c:out value="${student.groupId}"></c:out></td>
+        <td>Group: <c:out value="${student.group.id}"></c:out></td>
 
         <td><a href="${pageContext.request.contextPath}/list/edit?id=${student.id}">edit</a>
             <a href="${pageContext.request.contextPath}/list/delete?id=${student.id}">delete</a>

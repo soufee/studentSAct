@@ -26,7 +26,7 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
         String login = request.getUserPrincipal().getName();
 
         long studentId = Long.valueOf(request.getParameter("id"));
-        StudentDTO student = studentService.getById(studentId);
+        Student student = studentService.getById(studentId);
 
         /*
         if (login.equals(student.getUser().getLogin())) {
